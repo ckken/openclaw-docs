@@ -1,0 +1,647 @@
+# Schema 完整参考
+
+本文档包含 OpenClaw 配置的完整 Schema 及默认值。
+
+## 顶层结构
+
+```json
+{
+  "meta": { ... },
+  "env": { ... },
+  "diagnostics": { ... },
+  "logging": { ... },
+  "update": { ... },
+  "browser": { ... },
+  "ui": { ... },
+  "auth": { ... },
+  "models": { ... },
+  "nodeHost": { ... },
+  "agents": { ... },
+  "tools": { ... },
+  "bindings": [ ... ],
+  "broadcast": { ... },
+  "audio": { ... },
+  "media": { ... },
+  "messages": { ... },
+  "commands": { ... },
+  "hooks": { ... },
+  "channels": { ... },
+  "gateway": { ... },
+  "plugins": { ... }
+}
+```
+
+---
+
+## meta
+
+元信息配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `lastTouchedVersion` | string | - | 上次修改版本 |
+| `lastTouchedAt` | string | - | 上次修改时间 |
+
+---
+
+## env
+
+环境变量配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `shellEnv.enabled` | boolean | false | 启用 Shell 环境 |
+| `shellEnv.timeoutMs` | number | 10000 | Shell 超时(毫秒) |
+| `vars` | object | {} | 环境变量映射 |
+
+---
+
+## diagnostics
+
+诊断配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `enabled` | boolean | false | 启用诊断 |
+| `flags` | array | [] | 诊断标志 |
+| `otel.enabled` | boolean | false | 启用 OpenTelemetry |
+| `otel.endpoint` | string | "" | OTLP 端点 |
+| `otel.protocol` | string | "http/protobuf" | 协议 |
+| `otel.serviceName` | string | "openclaw" | 服务名 |
+| `otel.traces` | boolean | false | 启用追踪 |
+| `otel.metrics` | boolean | false | 启用指标 |
+| `otel.logs` | boolean | false | 启用日志 |
+| `otel.sampleRate` | number | 0.1 | 采样率 |
+| `otel.flushIntervalMs` | number | 5000 | 刷新间隔 |
+
+---
+
+## logging
+
+日志配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `level` | string | "info" | 日志级别 |
+| `file` | string | "" | 日志文件路径 |
+| `consoleLevel` | string | "info" | 控制台日志级别 |
+| `consoleStyle` | string | "pretty" | 控制台样式 |
+| `redactSensitive` | string | "off" | 脱敏模式 |
+| `redactPatterns` | array | [] | 脱敏正则 |
+
+### 日志级别
+
+```
+silent | fatal | error | warn | info | debug | trace
+```
+
+---
+
+## update
+
+更新配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `channel` | string | "stable" | 更新通道 |
+| `checkOnStart` | boolean | true | 启动时检查更新 |
+
+### 更新通道
+
+```
+stable | beta | dev
+```
+
+---
+
+## browser
+
+浏览器控制配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `enabled` | boolean | true | 启用浏览器 |
+| `evaluateEnabled` | boolean | true | 允许 JavaScript 执行 |
+| `cdpUrl` | string | "" | CDP 连接 URL |
+| `color` | string | "" | 浏览器主题色 |
+| `executablePath` | string | "" | Chrome 可执行文件路径 |
+| `headless` | boolean | true | 无头模式 |
+| `noSandbox` | boolean | false | 禁用沙箱 |
+| `attachOnly` | boolean | false | 仅附加模式 |
+| `defaultProfile` | string | "openclaw" | 默认配置 |
+
+---
+
+## ui
+
+用户界面配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `seamColor` | string | "#646cff" | 界面主题色 |
+| `assistant.name` | string | "Assistant" | 助手名称 |
+| `assistant.avatar` | string | "" | 助手头像 |
+
+---
+
+## auth
+
+认证配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `profiles` | object | {} | 认证配置集 |
+| `order` | object | {} | 认证顺序 |
+| `cooldowns.billingBackoffHours` | number | 24 | 计费退避时间 |
+| `cooldowns.failureWindowHours` | number | 24 | 失败窗口时间 |
+
+### 认证模式
+
+```
+api_key | oauth | token
+```
+
+---
+
+## models
+
+模型配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `mode` | string | "merge" | 合并模式 |
+| `providers` | object | {} | 模型提供者 |
+| `bedrockDiscovery.enabled` | boolean | false | AWS Bedrock 自动发现 |
+
+### Provider 配置
+
+```json
+{
+  "providers": {
+    "minimax": {
+      "baseUrl": "https://api.minimaxi.com/anthropic",
+      "apiKey": "YOUR_API_KEY",
+      "api": "anthropic-messages",
+      "models": [
+        {
+          "id": "MiniMax-M2.5",
+          "name": "MiniMax M2.5",
+          "reasoning": false,
+          "input": ["text"],
+          "contextWindow": 200000,
+          "maxTokens": 8192,
+          "cost": { "input": 15, "output": 60 }
+        }
+      ]
+    }
+  }
+}
+```
+
+### API 类型
+
+```
+openai-completions | openai-responses | anthropic-messages 
+| google-generative-ai | github-copilot | bedrock-converse-stream | ollama
+```
+
+---
+
+## nodeHost
+
+节点主机配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `browserProxy.enabled` | boolean | false | 浏览器代理 |
+| `browserProxy.allowProfiles` | array | [] | 允许的配置 |
+
+---
+
+## agents
+
+Agent 配置（核心部分）。
+
+### agents.defaults
+
+全局默认配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `model.primary` | string | "" | 主用模型 |
+| `model.fallbacks` | array | [] | 备用模型 |
+| `imageModel.primary` | string | "" | 图片模型 |
+| `imageModel.fallbacks` | array | [] | 图片备用模型 |
+| `workspace` | string | "~/.openclaw/workspace" | 工作区路径 |
+| `repoRoot` | string | "" | Git 仓库根目录 |
+| `skipBootstrap` | boolean | false | 跳过引导 |
+| `bootstrapMaxChars` | number | 50000 | 引导最大字符 |
+| `bootstrapTotalMaxChars` | number | 150000 | 引导总最大字符 |
+| `userTimezone` | string | "" | 用户时区 |
+| `timeFormat` | string | "auto" | 时间格式 |
+| `contextTokens` | number | - | 上下文 Token 数 |
+| `timeoutSeconds` | number | 300 | 超时秒数 |
+| `mediaMaxMb` | number | - | 媒体最大 MB |
+| `imageMaxDimensionPx` | number | - | 图片最大尺寸 |
+| `typingIntervalSeconds` | number | - | 输入间隔 |
+| `thinkingDefault` | string | "off" | 思考模式 |
+| `verboseDefault` | string | "off" | 详细模式 |
+| `elevatedDefault` | string | "off" | 特权模式 |
+| `maxConcurrent` | number | 4 | 最大并发 |
+
+### agents.defaults.contextPruning
+
+上下文裁剪。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `mode` | string | "cache-ttl" | 裁剪模式 |
+| `ttl` | string | "5m" | TTL 时间 |
+| `keepLastAssistants` | number | - | 保留最后助手数 |
+| `softTrimRatio` | number | 0.3 | 软裁剪比例 |
+| `hardClearRatio` | number | 0.5 | 硬裁剪比例 |
+| `minPrunableToolChars` | number | - | 最小可裁剪字符 |
+
+### agents.defaults.compaction
+
+上下文压缩。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `mode` | string | "safeguard" | 压缩模式 |
+| `reserveTokensFloor` | number | 20000 | 保留 Token 下限 |
+| `maxHistoryShare` | number | 0.3 | 历史最大占比 |
+
+### agents.defaults.heartbeat
+
+心跳配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `every` | string | "55m" | 心跳间隔 |
+| `activeHours.start` | string | - | 活跃开始时间 |
+| `activeHours.end` | string | - | 活跃结束时间 |
+| `activeHours.timezone` | string | - | 活跃时区 |
+| `model` | string | - | 心跳使用模型 |
+| `includeReasoning` | boolean | - | 包含思考过程 |
+| `ackMaxChars` | number | - | 响应最大字符 |
+
+### agents.defaults.subagents
+
+子代理配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `maxConcurrent` | number | 8 | 最大并发 |
+| `maxSpawnDepth` | number | 1 | 最大嵌套深度 |
+| `maxChildrenPerAgent` | number | 5 | 每代理最大子进程 |
+| `archiveAfterMinutes` | number | - | 归档时间(分钟) |
+| `model` | string | - | 子代理模型 |
+| `thinking` | string | - | 思考配置 |
+
+### agents.defaults.sandbox
+
+沙箱配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `mode` | string | "off" | 沙箱模式 |
+| `workspaceAccess` | string | "rw" | 工作区访问权限 |
+| `sessionToolsVisibility` | string | "spawned" | 工具可见性 |
+| `scope` | string | "session" | 作用域 |
+| `perSession` | boolean | - | 每会话沙箱 |
+| `workspaceRoot` | string | "" | 工作区根目录 |
+
+### agents.list
+
+Agent 列表配置。
+
+```json
+{
+  "agents": {
+    "list": [
+      {
+        "id": "main",
+        "name": "Main Agent",
+        "default": true,
+        "workspace": "/path/to/workspace",
+        "model": { "primary": "minimax/MiniMax-M2.5" },
+        "skills": [],
+        "heartbeat": { "every": "55m" },
+        "identity": { "name": "", "emoji": "🤖" },
+        "groupChat": { "mentionPatterns": [], "historyLimit": 20 },
+        "tools": { "profile": "minimal" }
+      }
+    ]
+  }
+}
+```
+
+| 配置项 | 类型 | 必需 | 说明 |
+|--------|------|------|------|
+| `id` | string | 是 | Agent ID |
+| `name` | string | - | Agent 名称 |
+| `default` | boolean | - | 是否默认 Agent |
+| `workspace` | string | - | 工作区路径 |
+| `agentDir` | string | - | Agent 目录 |
+| `model` | object | - | 模型配置 |
+| `skills` | array | - | 技能列表 |
+| `identity` | object | - | 身份配置 |
+| `groupChat` | object | - | 群聊配置 |
+| `tools` | object | - | 工具配置 |
+
+---
+
+## tools
+
+工具配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `profile` | string | "minimal" | 工具配置集 |
+| `allow` | array | [] | 允许的工具 |
+| `deny` | array | [] | 禁止的工具 |
+| `alsoAllow` | array | [] | 额外允许 |
+
+### tools.profile
+
+```
+minimal | coding | messaging | full
+```
+
+### tools.web
+
+网络工具配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `search.enabled` | boolean | false | 启用搜索 |
+| `search.provider` | string | "brave" | 搜索提供商 |
+| `search.apiKey` | string | "" | API Key |
+| `search.maxResults` | number | 10 | 最大结果数 |
+| `fetch.enabled` | boolean | true | 启用抓取 |
+| `fetch.maxChars` | number | 100000 | 最大字符数 |
+| `fetch.maxRedirects` | number | 3 | 最大重定向 |
+
+### tools.exec
+
+命令执行配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `host` | string | "gateway" | 执行主机 |
+| `security` | string | "deny" | 安全模式 |
+| `ask` | string | "off" | 询问模式 |
+| `safeBins` | array | [] | 安全命令白名单 |
+| `timeoutSec` | number | 300 | 超时秒数 |
+| `backgroundMs` | number | - | 后台运行时间 |
+| `cleanupMs` | number | - | 清理时间 |
+
+### tools.elevated
+
+特权工具配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `enabled` | boolean | false | 启用特权 |
+| `allowFrom` | object | {} | 允许来源 |
+
+### tools.loopDetection
+
+循环检测配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `enabled` | boolean | true | 启用检测 |
+| `historySize` | number | 50 | 历史大小 |
+| `warningThreshold` | number | 10 | 警告阈值 |
+| `criticalThreshold` | number | 20 | 严重阈值 |
+
+---
+
+## bindings
+
+消息绑定配置。
+
+```json
+{
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "telegram",
+        "accountId": "default"
+      }
+    }
+  ]
+}
+```
+
+| 配置项 | 类型 | 必需 | 说明 |
+|--------|------|------|------|
+| `agentId` | string | 是 | Agent ID |
+| `match.channel` | string | 是 | 通道类型 |
+| `match.accountId` | string | - | 账户 ID |
+| `match.peer.kind` | string | - | 消息类型 |
+| `match.peer.id` | string | - | 消息来源 ID |
+| `match.guildId` | string | - | Discord 服务器 |
+| `match.teamId` | string | - | Slack 团队 ID |
+
+---
+
+## broadcast
+
+广播配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `strategy` | string | "parallel" | 广播策略 |
+
+```
+parallel | sequential
+```
+
+---
+
+## audio
+
+音频配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `transcription.command` | array | [] | 转录命令 |
+
+---
+
+## media
+
+媒体配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `preserveFilenames` | boolean | false | 保留文件名 |
+
+---
+
+## messages
+
+消息配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `messagePrefix` | string | "" | 消息前缀 |
+| `responsePrefix` | string | "" | 响应前缀 |
+| `queue.mode` | string | "steer" | 队列模式 |
+
+### 队列模式
+
+```
+steer | followup | collect | steer-backlog | steer+backlog | queue | interrupt
+```
+
+---
+
+## commands
+
+命令配置。
+
+---
+
+## hooks
+
+钩子配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `internal` | object | {} | 内部钩子 |
+
+---
+
+## channels
+
+通道配置。
+
+### channels.telegram
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `enabled` | boolean | false | 启用 Telegram |
+| `botToken` | string | "" | Bot Token |
+| `dmPolicy` | string | "pairing" | 私聊策略 |
+| `groupPolicy` | string | "allowlist" | 群组策略 |
+| `streamMode` | string | "partial" | 流模式 |
+
+### channels.discord
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `enabled` | boolean | false | 启用 Discord |
+| `botToken` | string | "" | Bot Token |
+| `allowedChannels` | array | [] | 允许的频道 |
+
+### channels.slack
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `enabled` | boolean | false | 启用 Slack |
+| `botToken` | string | "" | Bot Token |
+| `signingSecret` | string | "" | 签名密钥 |
+
+### 策略类型
+
+```
+open | pairing | allowlist | denylist
+```
+
+---
+
+## gateway
+
+网关配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `port` | number | 18789 | 端口 |
+| `mode` | string | "local" | 模式 |
+| `bind` | string | "loopback" | 绑定地址 |
+| `trustedProxies` | array | [] | 信任代理 |
+| `auth.mode` | string | "token" | 认证模式 |
+| `auth.token` | string | "" | 认证令牌 |
+| `tailscale.mode` | string | "off" | Tailscale 模式 |
+
+### Gateway 模式
+
+```
+local | remote
+```
+
+---
+
+## plugins
+
+插件配置。
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| 动态 | object | - | 插件特定配置 |
+
+---
+
+## 完整示例
+
+```json
+{
+  "meta": {
+    "lastTouchedVersion": "1.0.0",
+    "lastTouchedAt": "2024-01-01T00:00:00Z"
+  },
+  "env": {
+    "shellEnv": { "enabled": false },
+    "vars": {}
+  },
+  "diagnostics": { "enabled": false },
+  "logging": {
+    "level": "info",
+    "consoleLevel": "info",
+    "consoleStyle": "pretty"
+  },
+  "update": {
+    "channel": "stable",
+    "checkOnStart": true
+  },
+  "browser": { "enabled": true, "headless": true },
+  "ui": { "seamColor": "#646cff" },
+  "auth": { "profiles": {}, "cooldowns": {} },
+  "models": { "mode": "merge", "providers": {} },
+  "agents": {
+    "defaults": {
+      "model": { "primary": "minimax/MiniMax-M2.5" },
+      "contextPruning": { "mode": "cache-ttl", "ttl": "5m" },
+      "compaction": { "mode": "safeguard", "reserveTokensFloor": 20000 },
+      "heartbeat": { "every": "55m" },
+      "maxConcurrent": 4,
+      "subagents": { "maxConcurrent": 8 }
+    },
+    "list": [
+      { "id": "main", "default": true }
+    ]
+  },
+  "tools": {
+    "profile": "minimal",
+    "web": { "search": { "enabled": false }, "fetch": { "enabled": true } },
+    "elevated": { "enabled": false },
+    "exec": { "host": "gateway", "security": "deny" }
+  },
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": { "channel": "telegram" }
+    }
+  ],
+  "channels": {
+    "telegram": { "enabled": false, "dmPolicy": "pairing" }
+  },
+  "gateway": { "port": 18789, "mode": "local" },
+  "plugins": {}
+}
+```

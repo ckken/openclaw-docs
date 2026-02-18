@@ -44,6 +44,7 @@ export default defineConfig({
           text: 'Schema 参考',
           items: [
             { text: '概述', link: '/schema/overview.html' },
+            { text: '完整参考', link: '/schema/full.html' },
             { text: 'agents', link: '/schema/agents.html' },
             { text: 'channels', link: '/schema/channels.html' },
             { text: 'bindings', link: '/schema/bindings.html' },
