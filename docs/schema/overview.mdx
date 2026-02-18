@@ -1,0 +1,40 @@
+# Schema 概述
+
+本文档详细介绍 OpenClaw 配置文件的完整 Schema。
+
+## 顶层结构
+
+| 配置项 | 类型 | 说明 |
+|--------|------|------|
+| `meta` | object | 元信息 |
+| `env` | object | 环境变量 |
+| `wizard` | object | 向导配置 |
+| `diagnostics` | object | 诊断配置 |
+| `logging` | object | 日志配置 |
+| `update` | object | 更新配置 |
+| `browser` | object | 浏览器配置 |
+| `ui` | object | UI 配置 |
+| `auth` | object | 认证配置 |
+| `models` | object | 模型配置 |
+| `nodeHost` | object | 节点主机 |
+| `agents` | object | Agent 配置 |
+| `tools` | object | 工具配置 |
+| `bindings` | array | 通道绑定 |
+| `broadcast` | object | 广播配置 |
+| `audio` | object | 音频配置 |
+| `media` | object | 媒体配置 |
+| `messages` | object | 消息配置 |
+| `commands` | object | 命令配置 |
+| `hooks` | object | 钩子配置 |
+| `channels` | object | 通道配置 |
+| `gateway` | object | 网关配置 |
+| `plugins` | object | 插件配置 |
+
+## 详细文档
+
+- [agents](/schema/agents) - Agent 配置
+- [channels](/schema/channels) - 通道配置
+- [bindings](/schema/bindings) - 消息绑定
+- [gateway](/schema/gateway) - 网关配置
+- [models](/schema/models) - 模型配置
+- [tools](/schema/tools) - 工具配置

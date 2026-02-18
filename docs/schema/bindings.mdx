@@ -1,0 +1,117 @@
+# bindings 配置
+
+绑定配置决定消息如何路由到不同的 Agent。
+
+## 基本结构
+
+```json
+{
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "telegram",
+        "accountId": "default"
+      }
+    }
+  ]
+}
+```
+
+## 配置项
+
+| 配置项 | 类型 | 必需 | 说明 |
+|--------|------|------|------|
+| `agentId` | string | 是 | 目标 Agent ID |
+| `match` | object | 是 | 匹配条件 |
+| `match.channel` | string | 是 | 通道类型 |
+| `match.accountId` | string | 否 | 账户 ID |
+| `match.peer.kind` | string | 否 | 消息类型 (direct/group/channel/dm) |
+| `match.peer.id` | string | 否 | 消息来源 ID |
+| `match.guildId` | string | 否 | Discord 服务器 ID |
+| `match.teamId` | string | 否 | Slack team ID |
+| `match.roles` | array | 否 | 角色列表 |
+
+## 匹配示例
+
+### 按通道匹配
+
+```json
+{
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "telegram"
+      }
+    }
+  ]
+}
+```
+
+### 按账户匹配
+
+```json
+{
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "telegram",
+        "accountId": "default"
+      }
+    },
+    {
+      "agentId": "coder",
+      "match": {
+        "channel": "telegram",
+        "accountId": "coder"
+      }
+    }
+  ]
+}
+```
+
+### 按群组匹配
+
+```json
+{
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "discord",
+        "guildId": "123456789"
+      }
+    }
+  ]
+}
+```
+
+### 按消息类型匹配
+
+```json
+{
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "direct"
+        }
+      }
+    }
+  ]
+}
+```
+
+## 匹配优先级
+
+匹配按照数组顺序进行，第一个匹配的规则生效。
+
+建议将更具体的规则放在前面：
+
+1. 特定账户/群组
+2. 特定通道
+3. 默认规则

@@ -1,0 +1,120 @@
+# models 配置
+
+模型配置定义了可用的 AI 模型及其连接信息。
+
+## 基本结构
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "minimax": { ... },
+      "nvidia": { ... },
+      "custom": { ... }
+    }
+  }
+}
+```
+
+## 配置项
+
+### 全局配置
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `mode` | string | merge | 模式 (merge/replace) |
+
+### Provider 配置
+
+```json
+{
+  "providers": {
+    "minimax": {
+      "baseUrl": "https://api.minimaxi.com/anthropic",
+      "apiKey": "YOUR_API_KEY",
+      "api": "anthropic-messages",
+      "models": [
+        {
+          "id": "MiniMax-M2.5",
+          "name": "MiniMax M2.5",
+          "reasoning": false,
+          "input": ["text"],
+          "cost": {
+            "input": 15,
+            "output": 60,
+            "cacheRead": 2,
+            "cacheWrite": 10
+          },
+          "contextWindow": 200000,
+          "maxTokens": 8192
+        }
+      ]
+    }
+  }
+}
+```
+
+### Provider 配置项
+
+| 配置项 | 类型 | 必需 | 说明 |
+|--------|------|------|------|
+| `baseUrl` | string | 是 | API 基础地址 |
+| `apiKey` | string | 是 | API 密钥 |
+| `api` | string | 是 | API 类型 |
+| `headers` | object | 否 | 自定义请求头 |
+| `models` | array | 是 | 模型列表 |
+
+### 模型配置项
+
+| 配置项 | 类型 | 说明 |
+|--------|------|------|
+| `id` | string | 模型 ID |
+| `name` | string | 显示名称 |
+| `reasoning` | boolean | 是否支持推理 |
+| `input` | array | 输入类型 (text/image) |
+| `cost` | object | 价格配置 |
+| `contextWindow` | number | 上下文窗口 |
+| `maxTokens` | number | 最大输出 token |
+| `compat` | object | 兼容性配置 |
+
+## API 类型
+
+| 类型 | 说明 |
+|------|------|
+| `anthropic-messages` | Anthropic Messages API |
+| `openai-completions` | OpenAI Completions API |
+| `openai-responses` | OpenAI Responses API |
+| `google-generative-ai` | Google Gemini API |
+| `bedrock-converse-stream` | AWS Bedrock |
+| `ollama` | Ollama 本地模型 |
+
+## 常用模型 ID
+
+| Provider | 模型 ID | 别名 |
+|----------|---------|------|
+| minimax | MiniMax-M2.5 | minimax |
+| nvidia | minimaxai/minimax-m2 | m2 |
+| nvidia | minimaxai/minimax-m2.1 | m2.1 |
+| nvidia | deepseek-ai/deepseek-v3.2 | v3 |
+| nvidia | moonshotai/kimi-k2-thinking | k2 |
+| nvidia | qwen/qwen3.5-397b-a17b | qwen |
+| yunyi-claude | claude-opus-4-5 | opus |
+
+## Agent 中的使用
+
+```json
+{
+  "agents": {
+    "list": [
+      {
+        "id": "main",
+        "model": {
+          "primary": "minimax/MiniMax-M2.5",
+          "fallbacks": ["minimax/MiniMax-M2"]
+        }
+      }
+    ]
+  }
+}
+```

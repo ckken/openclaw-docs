@@ -1,0 +1,115 @@
+# CLI 命令参考
+
+OpenClaw 命令行工具使用说明。
+
+## 基础命令
+
+### openclaw status
+
+查看系统状态：
+
+```bash
+openclaw status
+openclaw status --deep    # 深度检查
+```
+
+### openclaw gateway
+
+网关管理：
+
+```bash
+openclaw gateway start    # 启动网关
+openclaw gateway stop     # 停止网关
+openclaw gateway restart  # 重启网关
+openclaw gateway status  # 查看状态
+```
+
+### openclaw config
+
+配置管理：
+
+```bash
+openclaw config get [path]     # 获取配置
+openclaw config set <path> <value>  # 设置配置
+openclaw config patch <json>   # 补丁配置
+```
+
+## 诊断命令
+
+### openclaw doctor
+
+系统诊断：
+
+```bash
+openclaw doctor              # 运行诊断
+openclaw doctor --verbose    # 详细输出
+openclaw doctor --non-interactive  # 非交互模式
+```
+
+### openclaw logs
+
+日志查看：
+
+```bash
+openclaw logs               # 查看日志
+openclaw logs --follow      # 实时跟踪
+openclaw logs --lines 100   # 指定行数
+```
+
+### openclaw security
+
+安全审计：
+
+```bash
+openclaw security audit         # 安全检查
+openclaw security audit --deep  # 深度检查
+```
+
+## Agent 命令
+
+### openclaw sessions
+
+会话管理：
+
+```bash
+openclaw sessions list          # 列出会话
+openclaw sessions prune         # 清理会话
+```
+
+### openclaw agents
+
+Agent 管理：
+
+```bash
+openclaw agents list           # 列出 Agent
+```
+
+## 通道命令
+
+### openclaw channel
+
+通道测试：
+
+```bash
+openclaw channel test telegram  # 测试 Telegram
+```
+
+## 配置命令
+
+### openclaw update
+
+更新管理：
+
+```bash
+openclaw update check    # 检查更新
+openclaw update run      # 执行更新
+```
+
+## 选项
+
+| 选项 | 说明 |
+|------|------|
+| `--help` | 显示帮助 |
+| `--version` | 显示版本 |
+| `--verbose` | 详细输出 |
+| `--json` | JSON 输出 |

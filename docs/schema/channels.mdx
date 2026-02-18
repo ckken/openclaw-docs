@@ -1,0 +1,101 @@
+# channels 配置
+
+通道配置定义了你的消息来源和接收方式。
+
+## 支持的通道
+
+- **Telegram** - 即时通讯
+- **Discord** - 社区平台
+- **Slack** - 企业协作
+- **WhatsApp** - 即时通讯
+- **Signal** - 隐私通讯
+- **IRC** - 传统聊天协议
+
+## Telegram 配置
+
+```json
+{
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "YOUR_BOT_TOKEN",
+      "dmPolicy": "pairing",
+      "groupPolicy": "allowlist",
+      "streamMode": "partial",
+      "accounts": {
+        "default": {
+          "enabled": true,
+          "botToken": "BOT_TOKEN",
+          "dmPolicy": "pairing",
+          "groupPolicy": "allowlist"
+        }
+      }
+    }
+  }
+}
+```
+
+## 配置项说明
+
+### 主配置
+
+| 配置项 | 类型 | 说明 |
+|--------|------|------|
+| `enabled` | boolean | 是否启用 |
+| `botToken` | string | Bot Token |
+| `dmPolicy` | string | 私聊策略 (pairing/open/allowlist/denylist) |
+| `groupPolicy` | string | 群组策略 |
+| `streamMode` | string | 流模式 (partial/full) |
+
+### accounts（多账户）
+
+支持为不同用途配置多个 bot：
+
+```json
+{
+  "accounts": {
+    "default": { ... },
+    "coder": { ... },
+    "watchman": { ... }
+  }
+}
+```
+
+### 策略说明
+
+| 策略 | 说明 |
+|------|------|
+| `open` | 允许所有人 |
+| `pairing` | 需要配对 |
+| `allowlist` | 仅允许列表 |
+| `denylist` | 禁止列表 |
+
+## 其他通道配置
+
+### Discord
+
+```json
+{
+  "channels": {
+    "discord": {
+      "enabled": true,
+      "botToken": "YOUR_DISCORD_TOKEN",
+      "allowedChannels": ["channel-id-1"]
+    }
+  }
+}
+```
+
+### Slack
+
+```json
+{
+  "channels": {
+    "slack": {
+      "enabled": true,
+      "botToken": "xoxb-...",
+      "signingSecret": "..."
+    }
+  }
+}
+```

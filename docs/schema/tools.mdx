@@ -1,0 +1,142 @@
+# tools 配置
+
+工具配置控制 Agent 可以使用的功能权限。
+
+## 基本结构
+
+```json
+{
+  "tools": {
+    "profile": "full",
+    "allow": [...],
+    "deny": [...],
+    "web": { ... },
+    "exec": { ... },
+    "elevated": { ... }
+  }
+}
+```
+
+## 工具配置项
+
+### 全局配置
+
+| 配置项 | 类型 | 说明 |
+|--------|------|------|
+| `profile` | string | 工具配置集 (minimal/coding/messaging/full) |
+| `allow` | array | 允许的工具列表 |
+| `deny` | array | 禁止的工具列表 |
+| `alsoAllow` | array | 额外允许的工具 |
+
+### Web 工具
+
+```json
+{
+  "tools": {
+    "web": {
+      "search": {
+        "enabled": true,
+        "provider": "brave",
+        "apiKey": "YOUR_API_KEY"
+      },
+      "fetch": {
+        "enabled": true,
+        "maxChars": 100000
+      }
+    }
+  }
+}
+```
+
+| 配置项 | 类型 | 说明 |
+|--------|------|------|
+| `search.enabled` | boolean | 是否启用搜索 |
+| `search.provider` | string | 搜索提供商 (brave/perplexity/grok) |
+| `fetch.enabled` | boolean | 是否启用抓取 |
+| `fetch.maxChars` | number | 最大字符数 |
+
+### 执行工具
+
+```json
+{
+  "tools": {
+    "exec": {
+      "host": "gateway",
+      "security": "allowlist",
+      "timeoutSec": 300,
+      "safeBins": ["git", "node", "pnpm"]
+    }
+  }
+}
+```
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `host` | string | gateway | 执行主机 (sandbox/gateway/node) |
+| `security` | string | deny | 安全模式 (deny/allowlist/full) |
+| `timeoutSec` | number | 300 | 超时时间 |
+| `safeBins` | array | [] | 安全命令白名单 |
+
+### 特权工具
+
+```json
+{
+  "tools": {
+    "elevated": {
+      "enabled": true,
+      "allowFrom": {
+        "telegram": [6490287374]
+      }
+    }
+  }
+}
+```
+
+| 配置项 | 类型 | 说明 |
+|--------|------|------|
+| `enabled` | boolean | 是否启用 |
+| `allowFrom` | object | 允许的来源 |
+
+### 工具配置文件
+
+| Profile | 说明 |
+|---------|------|
+| `minimal` | 基础工具 |
+| `coding` | 编程工具 |
+| `messaging` | 消息工具 |
+| `full` | 全部工具 |
+
+## 工具列表
+
+### 文件操作
+- `read` - 读取文件
+- `write` - 写入文件
+- `edit` - 编辑文件
+
+### 命令执行
+- `exec` - 执行命令
+- `process` - 进程管理
+
+### 浏览器
+- `browser` - 浏览器控制
+- `browser.snapshot` - 页面快照
+
+### 网络
+- `web_search` - 网络搜索
+- `web_fetch` - 网页抓取
+
+### 消息
+- `message.send` - 发送消息
+- `message.react` - 添加反应
+
+### 其他
+- `gateway` - 网关控制
+- `cron` - 定时任务
+- `nodes` - 节点控制
+
+## 安全建议
+
+1. **最小权限** - 使用 `minimal` 或 `coding` profile
+2. **限制 exec** - 设置 `security: "deny"` 或 `"allowlist"`
+3. **禁用 elevated** - 生产环境关闭特权工具
+4. **限制 web** - 只启用必要的 web 工具

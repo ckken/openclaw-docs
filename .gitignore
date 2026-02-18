@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.rspress/
+*.log
+.DS_Store

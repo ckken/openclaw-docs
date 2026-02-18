@@ -1,0 +1,60 @@
+# 快速开始
+
+本指南将帮助你快速上手 OpenClaw。
+
+## 前置要求
+
+- Node.js 18+
+- pnpm 8+
+- Telegram Bot Token（用于 Telegram 集成）
+
+## 安装
+
+```bash
+# 全局安装 OpenClaw
+pnpm install -g openclaw
+
+# 初始化配置
+openclaw init
+```
+
+## 基础配置
+
+创建 `openclaw.json` 配置文件：
+
+```json
+{
+  "gateway": {
+    "port": 18789,
+    "mode": "local"
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "YOUR_BOT_TOKEN"
+    }
+  },
+  "agents": {
+    "list": [
+      {
+        "id": "main"
+      }
+    ]
+  }
+}
+```
+
+## 启动服务
+
+```bash
+# 启动 Gateway
+openclaw gateway start
+
+# 检查状态
+openclaw status
+```
+
+## 下一步
+
+- [配置基础](/guide/configuration) - 了解更多配置选项
+- [Schema 参考](/schema/overview) - 完整配置项说明

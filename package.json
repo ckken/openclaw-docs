@@ -1,0 +1,20 @@
+{
+  "name": "openclaw-docs",
+  "version": "1.0.0",
+  "description": "OpenClaw 使用手册 - 配置 Schema 参考文档",
+  "main": "index.js",
+  "scripts": {
+    "dev": "rspress dev",
+    "build": "rspress build",
+    "preview": "rspress preview",
+    "deploy": "rspress build && wrangler pages deploy dist"
+  },
+  "keywords": ["openclaw", "documentation", "schema"],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.29.3",
+  "devDependencies": {
+    "rspress": "^1.47.1",
+    "@cloudflare/workers-types": "^4.20241127.0"
+  }
+}

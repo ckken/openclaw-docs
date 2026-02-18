@@ -1,0 +1,94 @@
+# 配置基础
+
+OpenClaw 使用 `openclaw.json` 文件进行配置。
+
+## 配置文件位置
+
+- **主配置**: `~/.openclaw/openclaw.json`
+- **工作区配置**: `<workspace>/openclaw.json`
+
+## 核心配置结构
+
+```json
+{
+  "gateway": { ... },
+  "channels": { ... },
+  "agents": { ... },
+  "bindings": [ ... ],
+  "models": { ... },
+  "tools": { ... }
+}
+```
+
+## 配置优先级
+
+1. 命令行参数
+2. 工作区配置
+3. 主配置文件
+4. 默认值
+
+## 常用配置示例
+
+### Telegram 通道
+
+```json
+{
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "YOUR_BOT_TOKEN",
+      "dmPolicy": "pairing",
+      "groupPolicy": "allowlist"
+    }
+  }
+}
+```
+
+### Agent 配置
+
+```json
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "minimax/MiniMax-M2.5"
+      },
+      "heartbeat": {
+        "every": "55m"
+      }
+    },
+    "list": [
+      {
+        "id": "main"
+      },
+      {
+        "id": "coder",
+        "model": {
+          "primary": "claude-opus-4-5"
+        }
+      }
+    ]
+  }
+}
+```
+
+### 消息绑定
+
+```json
+{
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "telegram",
+        "accountId": "default"
+      }
+    }
+  ]
+}
+```
+
+## 下一步
+
+- [Schema 参考](/schema/overview) - 完整配置项说明
+- [CLI 命令](/reference/cli) - 命令行工具

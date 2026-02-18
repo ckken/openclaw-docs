@@ -1,0 +1,117 @@
+# gateway 配置
+
+网关配置控制 OpenClaw 的核心网络服务。
+
+## 基本结构
+
+```json
+{
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "auth": { ... },
+    "tailscale": { ... }
+  }
+}
+```
+
+## 配置项
+
+### 网络配置
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `port` | number | 18789 | 监听端口 |
+| `mode` | string | local | 模式 (local/remote) |
+| `bind` | string | loopback | 绑定地址 |
+| `trustedProxies` | array | [] | 信任的代理 |
+
+### 认证配置
+
+```json
+{
+  "auth": {
+    "mode": "token",
+    "token": "YOUR_AUTH_TOKEN"
+  }
+}
+```
+
+| 配置项 | 类型 | 说明 |
+|--------|------|------|
+| `mode` | string | 认证模式 (token/none) |
+| `token` | string | 认证令牌 |
+
+### Tailscale 配置
+
+```json
+{
+  "tailscale": {
+    "mode": "off",
+    "resetOnExit": false
+  }
+}
+```
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `mode` | string | off | 模式 (off/client/server) |
+| `resetOnExit` | boolean | false | 退出时重置 |
+
+### 节点控制
+
+```json
+{
+  "gateway": {
+    "nodes": {
+      "denyCommands": [
+        "camera.snap",
+        "camera.clip",
+        "screen.record"
+      ]
+    }
+  }
+}
+```
+
+| 配置项 | 类型 | 说明 |
+|--------|------|------|
+| `nodes.denyCommands` | array | 禁止的节点命令 |
+
+## 示例配置
+
+### 本地模式
+
+```json
+{
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "your-secret-token"
+    }
+  }
+}
+```
+
+### 远程模式
+
+```json
+{
+  "gateway": {
+    "port": 18789,
+    "mode": "remote",
+    "bind": "0.0.0.0",
+    "auth": {
+      "mode": "token",
+      "token": "your-secret-token"
+    },
+    "tailscale": {
+      "mode": "client"
+    }
+  }
+}
+```
