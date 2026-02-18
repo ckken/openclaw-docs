@@ -1,0 +1,5 @@
+permalink: /:title/
+exclude:
+  - node_modules
+  - doc_build
+  - .rspress
