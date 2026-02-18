@@ -41,7 +41,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .rspress/build
+          path: doc_build
 
   deploy:
     needs: build
@@ -56,4 +56,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: openclaw-docs
-          directory: .rspress/build
+          directory: doc_build
