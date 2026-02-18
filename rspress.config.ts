@@ -3,8 +3,7 @@ import { defineConfig } from 'rspress/config';
 export default defineConfig({
   title: 'OpenClaw 使用手册',
   description: 'OpenClaw 配置 Schema 参考文档',
-  base: '/openclaw-docs/',
-  docSlugDisallowEvilCharsRegex: 'aaa',
+  base: '/openclaw-docs',
   themeConfig: {
     logo: 'https://openclaw.ai/logo.png',
     socialLinks: [
